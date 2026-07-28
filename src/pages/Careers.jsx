@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import MagneticButton from '../components/MagneticButton';
@@ -6,8 +6,11 @@ import MagneticButton from '../components/MagneticButton';
 gsap.registerPlugin(ScrollTrigger);
 
 const Careers = () => {
+  const [appliedJobs, setAppliedJobs] = useState([]);
+
   const jobs = [
     { 
+      id: 1,
       title: 'Senior Frontend Developer', 
       location: 'Remote', 
       type: 'Full-time', 
@@ -15,6 +18,7 @@ const Careers = () => {
       description: 'Build amazing user interfaces with React and modern technologies'
     },
     { 
+      id: 2,
       title: 'UI/UX Designer', 
       location: 'New York', 
       type: 'Full-time', 
@@ -22,6 +26,7 @@ const Careers = () => {
       description: 'Create beautiful and intuitive user experiences'
     },
     { 
+      id: 3,
       title: 'Product Manager', 
       location: 'San Francisco', 
       type: 'Full-time', 
@@ -29,6 +34,7 @@ const Careers = () => {
       description: 'Lead product strategy and development initiatives'
     },
     { 
+      id: 4,
       title: 'DevOps Engineer', 
       location: 'Remote', 
       type: 'Full-time', 
@@ -36,6 +42,7 @@ const Careers = () => {
       description: 'Manage cloud infrastructure and deployment pipelines'
     },
     { 
+      id: 5,
       title: 'Content Writer', 
       location: 'Remote', 
       type: 'Part-time', 
@@ -63,6 +70,12 @@ const Careers = () => {
     '🚴 Gym membership',
     '🌴 Generous vacation policy',
   ];
+
+  const handleApply = (jobId) => {
+    if (!appliedJobs.includes(jobId)) {
+      setAppliedJobs([...appliedJobs, jobId]);
+    }
+  };
 
   useEffect(() => {
     gsap.from('.careers-header', {
@@ -178,48 +191,58 @@ const Careers = () => {
           <h2 className="text-4xl md:text-5xl font-bold text-center mb-16 gradient-text">
             Open Positions
           </h2>
-          <div className="jobs-list max-w-4xl mx-auto space-y-6">
-            {jobs.map((job, index) => (
-              <div 
-                key={index} 
-                className="job-card p-8 bg-slate-800/50 rounded-2xl border border-slate-700 hover:border-[var(--color-primary)] transition-all duration-300 hover:translate-x-2 group"
-                style={{ boxShadow: '0 0 0 rgba(99, 102, 241, 0)' }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.boxShadow = '0 10px 40px rgba(99, 102, 241, 0.2)';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.boxShadow = '0 0 0 rgba(99, 102, 241, 0)';
-                }}
-              >
-                <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6">
-                  <div className="flex-1">
-                    <h3 className="text-2xl font-bold mb-2" style={{ fontFamily: 'var(--font-family-heading)' }}>
-                      {job.title}
-                    </h3>
-                    <p className="text-slate-400 mb-4">
-                      {job.description}
-                    </p>
-                    <div className="flex flex-wrap gap-6 text-slate-400 text-sm">
-                      <span className="flex items-center gap-2">
-                        📍 {job.location}
-                      </span>
-                      <span className="flex items-center gap-2">
-                        ⏰ {job.type}
-                      </span>
-                      <span className="flex items-center gap-2">
-                        🏢 {job.department}
-                      </span>
+          <div className="jobs-list max-w-5xl mx-auto mr-7 space-y-6">
+            {jobs.map((job, index) => {
+              const isApplied = appliedJobs.includes(job.id);
+              
+              return (
+                <div 
+                  key={index} 
+                  className="job-card p-8 bg-slate-800/50 rounded-2xl border border-slate-700 hover:border-[var(--color-primary)] transition-all duration-300 hover:translate-x-2 group"
+                  style={{ boxShadow: '0 0 0 rgba(99, 102, 241, 0)' }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.boxShadow = '0 10px 40px rgba(99, 102, 241, 0.2)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.boxShadow = '0 0 0 rgba(99, 102, 241, 0)';
+                  }}
+                >
+                  <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6">
+                    <div className="flex-1">
+                      <h3 className="text-2xl font-bold mb-2" style={{ fontFamily: 'var(--font-family-heading)' }}>
+                        {job.title}
+                      </h3>
+                      <p className="text-slate-400 mb-4">
+                        {job.description}
+                      </p>
+                      <div className="flex flex-wrap gap-6 text-slate-400 text-sm">
+                        <span className="flex items-center gap-2">
+                          📍 {job.location}
+                        </span>
+                        <span className="flex items-center gap-2">
+                          ⏰ {job.type}
+                        </span>
+                        <span className="flex items-center gap-2">
+                          🏢 {job.department}
+                        </span>
+                      </div>
                     </div>
+                    <MagneticButton 
+                      className="text-white whitespace-nowrap transition-all"
+                      style={{ 
+                        background: isApplied ? '#10b981' : 'var(--color-primary)',
+                        cursor: isApplied ? 'default' : 'pointer',
+                        opacity: isApplied ? 0.8 : 1
+                      }}
+                      onClick={() => handleApply(job.id)}
+                      disabled={isApplied}
+                    >
+                      {isApplied ? '✓ Applied' : 'Apply Now'}
+                    </MagneticButton>
                   </div>
-                  <MagneticButton 
-                    className="text-white whitespace-nowrap transition-all"
-                    style={{ background: 'var(--color-primary)' }}
-                  >
-                    Apply Now
-                  </MagneticButton>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </section>

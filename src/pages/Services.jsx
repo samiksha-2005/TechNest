@@ -53,6 +53,15 @@ const Services = () => {
     { number: '05', title: 'Launch', desc: 'Deploying and monitoring success' },
   ];
 
+  const technologies = [
+    { name: 'React', logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg' },
+    { name: 'Node.js', logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-original.svg' },
+    { name: 'Python', logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg' },
+    { name: 'AWS', logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/amazonwebservices/amazonwebservices-original-wordmark.svg' },
+    { name: 'MongoDB', logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mongodb/mongodb-original.svg' },
+    { name: 'Docker', logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/docker/docker-original.svg' },
+  ];
+
   useEffect(() => {
     gsap.from('.services-header', {
       y: 100,
@@ -102,7 +111,7 @@ const Services = () => {
       </section>
 
       {/* Services Grid */}
-      <section className="section-padding">
+      <section className="pb-28">
         <div className="container-custom">
           <div className="services-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {servicesData.map((service, index) => (
@@ -191,16 +200,18 @@ const Services = () => {
             Technologies We Use
           </h2>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8">
-            {['React', 'Node.js', 'Python', 'AWS', 'MongoDB', 'Docker'].map((tech, index) => (
+            {technologies.map((tech, index) => (
               <div 
                 key={index}
                 className="flex flex-col items-center justify-center p-6 bg-slate-800/50 rounded-2xl border border-slate-700 hover:border-[var(--color-primary)] transition-all duration-300 hover:-translate-y-2 cursor-pointer group"
               >
-                <div className="text-4xl mb-3 group-hover:scale-110 transition-transform duration-300">
-                  💎
-                </div>
+                <img 
+                  src={tech.logo} 
+                  alt={tech.name}
+                  className="w-16 h-16 mb-3 group-hover:scale-110 transition-transform duration-300"
+                />
                 <span className="text-sm font-semibold text-slate-400 group-hover:text-[var(--color-primary)] transition-colors">
-                  {tech}
+                  {tech.name}
                 </span>
               </div>
             ))}

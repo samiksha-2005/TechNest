@@ -73,9 +73,9 @@ const Contact = () => {
   }, []);
 
   const contactInfo = [
-    { icon: '📧', title: 'Email', info: 'contact@corporate.com', link: 'mailto:contact@corporate.com' },
-    { icon: '📱', title: 'Phone', info: '+1 (555) 123-4567', link: 'tel:+15551234567' },
-    { icon: '📍', title: 'Office', info: '123 Business St, Suite 100\nNew York, NY 10001', link: null },
+    { icon: '📧', title: 'Email', info: 'contact@technest.com', link: 'mailto:contact@technest.com' },
+    { icon: '📱', title: 'Phone', info: '+91 98XXX XXXXX', link: 'tel:+15551234567' },
+    { icon: '📍', title: 'Office', info: '3rd Floor, Orion Business Park, Sector 62 Noida, Uttar Pradesh 201309', link: null },
     { icon: '⏰', title: 'Hours', info: 'Mon - Fri: 9:00 AM - 6:00 PM', link: null },
   ];
 
@@ -110,7 +110,7 @@ const Contact = () => {
             {/* Form */}
             <div className="lg:col-span-2">
               <form onSubmit={handleSubmit} className="contact-form bg-slate-800/50 p-10 ml-5 rounded-3xl border border-slate-700">
-                <div className="form-group mb-6 pl-15">
+                <div className="form-group mb-6 pl-20">
                   <label htmlFor="name" className="block mb-3 pl-3 font-semibold">Name </label>
                   <input
                     type="text"
@@ -124,7 +124,7 @@ const Contact = () => {
                   />
                 </div>
 
-                <div className="form-group mb-6 pl-15">
+                <div className="form-group mb-6 pl-20">
                   <label htmlFor="email" className="block mb-3 pl-3 font-semibold">Email</label>
                   <input
                     type="email"
@@ -138,7 +138,7 @@ const Contact = () => {
                   />
                 </div>
 
-                <div className="form-group mb-6 pl-15">
+                <div className="form-group mb-6 pl-20">
                   <label htmlFor="subject" className="block mb-3 pl-3 font-semibold">Subject</label>
                   <input
                     type="text"
@@ -152,7 +152,7 @@ const Contact = () => {
                   />
                 </div>
 
-                <div className="form-group mb-8 pl-15">
+                <div className="form-group mb-8 pl-20">
                   <label htmlFor="message" className="block mb-3 pl-3 font-semibold">Message</label>
                   <textarea
                     id="message"
@@ -178,7 +178,7 @@ const Contact = () => {
                 <MagneticButton 
                   type="submit"
                   disabled={formStatus.submitting}
-                  className="w-full text-white text-lg"
+                  className="w-[85%] text-white text-lg ml-10"
                   style={{ 
                     background: formStatus.submitting 
                       ? 'var(--color-secondary)' 
@@ -194,7 +194,7 @@ const Contact = () => {
             </div>
 
             {/* Contact Info */}
-            <div className="contact-info space-y-6">
+            <div className="contact-info space-y-6 -mt-12">
               {contactInfo.map((item, index) => (
                 <div 
                   key={index} 
@@ -219,7 +219,7 @@ const Contact = () => {
               ))}
 
               {/* Social Links */}
-              <div className="p-6 bg-slate-800/50 rounded-2xl border border-slate-700">
+              <div className="p-6 mt-19 bg-slate-800/50 rounded-2xl border border-slate-700">
                 <h3 className="text-xl font-bold mb-4" style={{ fontFamily: 'var(--font-family-heading)' }}>
                   Follow Us
                 </h3>
@@ -233,12 +233,16 @@ const Contact = () => {
                       className="w-12 h-12 rounded-full bg-slate-900 flex items-center justify-center transition-all duration-300 hover:-translate-y-1"
                       style={{
                         color: 'white',
+                        backgroundColor: social.color,
+                        opacity: 0.6
                       }}
                       onMouseEnter={(e) => {
                         e.currentTarget.style.background = social.color;
+                        e.currentTarget.style.opacity = 1;
                       }}
                       onMouseLeave={(e) => {
-                        e.currentTarget.style.background = '';
+                        e.currentTarget.style.background = social.color;
+                        e.currentTarget.style.opacity = 0.6;
                       }}
                     >
                       <i className={social.icon}></i>
@@ -252,7 +256,7 @@ const Contact = () => {
       </section>
 
       {/* Map */}
-      <section className="pb-20">
+      {/* <section className="pb-20">
         <div className="container-custom">
           <div 
             className="h-96 rounded-3xl flex flex-col items-center justify-center text-6xl relative overflow-hidden group cursor-pointer"
@@ -260,10 +264,10 @@ const Contact = () => {
           >
             <span className="mb-4 transition-transform duration-300 group-hover:scale-110">🗺️</span>
             <span className="text-lg text-white/90">Interactive Map Coming Soon</span>
-            {/* You can integrate Google Maps or Mapbox here */}
+            You can integrate Google Maps or Mapbox here
           </div>
         </div>
-      </section>
+      </section> */}
 
       {/* FAQ Section */}
       <section className="section-padding bg-slate-800/50">
