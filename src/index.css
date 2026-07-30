@@ -741,3 +741,7 @@ body .text-slate-50 {
 body.light .text-slate-50 {
   color: var(--text-color-light) !important;
 }
+
+body{
+  background-color: #16213f;
+}

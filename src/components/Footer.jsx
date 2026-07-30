@@ -1,8 +1,18 @@
 import { Link } from 'react-router-dom';
+import { useState } from 'react';
 import MagneticButton from './MagneticButton';
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
+  const [isSubscribed, setIsSubscribed] = useState(false);
+  const [email, setEmail] = useState('');
+
+  const handleSubscribe = () => {
+    if (!email || !email.trim()) {
+      return; // Don't do anything if email is empty
+    }
+    setIsSubscribed(true);
+  };
 
   return (
     <footer className="site-footer">
@@ -67,14 +77,27 @@ const Footer = () => {
           <div>
             <h4 className="text-lg font-semibold mb-4">Newsletter</h4>
             <p className="site-footer__copy mb-4">Subscribe to our newsletter</p>
-            <div className="flex gap-2">
+            <div className="flex flex-col gap-3">
               <input 
                 type="email" 
                 placeholder="Your email" 
-                className="form-control flex-1 rounded-full text-sm"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                className="form-control w-full rounded-full text-sm"
               />
-              <MagneticButton className="px-6 py-2 rounded-full text-sm font-semibold text-white transition-all" style={{ background: 'linear-gradient(135deg, var(--color-primary), var(--color-secondary))' }}>
-                Subscribe
+              <MagneticButton 
+                onClick={handleSubscribe}
+                disabled={isSubscribed}
+                className="px-6 py-2 rounded-full text-sm font-semibold text-white transition-all w-40 self-start" 
+                style={{ 
+                  background: isSubscribed 
+                    ? 'linear-gradient(135deg, #10b981, #059669)' 
+                    : 'linear-gradient(135deg, var(--color-primary), var(--color-secondary))',
+                  cursor: isSubscribed ? 'default' : 'pointer'
+                }}
+              >
+                {isSubscribed ? 'Subscribed ✓' : 'Subscribe'}
               </MagneticButton>
             </div>
           </div>

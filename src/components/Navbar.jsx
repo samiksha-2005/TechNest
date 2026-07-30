@@ -1,6 +1,7 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import gsap from 'gsap';
+import MenuBar from './MenuBar';
 
 const Navbar = ({ theme, toggleTheme }) => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -24,21 +25,25 @@ const Navbar = ({ theme, toggleTheme }) => {
     );
   }, []);
 
-  useEffect(() => {
-    if (menuOpen) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = 'unset';
-    }
-  }, [menuOpen]);
-
   const toggleMenu = () => {
     setMenuOpen(!menuOpen);
   };
 
-  const closeMenu = () => {
+  const closeMenu = useCallback(() => {
     setMenuOpen(false);
-  };
+  }, []);
+
+  // Close menu when screen is resized to lg or above
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth >= 1024 && menuOpen) {
+        closeMenu();
+      }
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, [menuOpen, closeMenu]);
 
   const navLinks = [
     { name: 'Home', path: '/' },
@@ -63,7 +68,7 @@ const Navbar = ({ theme, toggleTheme }) => {
               TECHNEST
             </Link>
 
-            {/* Desktop Navigation */}
+            {/* Desktop Navigation - Visible on LG and above */}
             <div className="site-nav__links hidden lg:flex items-center gap-2">
               {navLinks.map((link) => (
                 <Link
@@ -85,9 +90,9 @@ const Navbar = ({ theme, toggleTheme }) => {
                 {theme === 'dark' ? '☀️' : '🌙'}
               </button>
 
-              {/* Hamburger Menu */}
+              {/* Hamburger Menu - Hidden on LG and above */}
               <button
-                className="site-nav__toggle lg:hidden flex flex-col gap-1.5 w-8 z-[1001] relative"
+                className="site-nav__toggle flex lg:hidden flex-col gap-1.5 w-8 z-[1001] relative"
                 onClick={toggleMenu}
                 aria-label="Toggle menu"
               >
@@ -100,39 +105,12 @@ const Navbar = ({ theme, toggleTheme }) => {
         </div>
       </nav>
 
-      {/* Mobile Menu */}
-      <div className={`site-nav__mobile fixed inset-0 z-[1000] flex flex-col items-center justify-center gap-8 transition-transform duration-500 lg:hidden ${
-        menuOpen ? 'translate-x-0' : 'translate-x-full'
-      }`}>
-        {navLinks.map((link, index) => (
-          <Link
-            key={link.path}
-            to={link.path}
-            onClick={closeMenu}
-            className="text-4xl font-semibold hover:text-[var(--color-primary)] transition-colors duration-300"
-            style={{
-              animation: menuOpen ? `fadeInUp 0.5s ease forwards ${index * 0.1}s` : 'none',
-              opacity: 0,
-              fontFamily: 'var(--font-family-heading)'
-            }}
-          >
-            {link.name}
-          </Link>
-        ))}
-      </div>
-
-      <style>{`
-        @keyframes fadeInUp {
-          from {
-            opacity: 0;
-            transform: translateY(30px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-      `}</style>
+      {/* Mobile Menu Component */}
+      <MenuBar 
+        menuOpen={menuOpen} 
+        closeMenu={closeMenu} 
+        navLinks={navLinks} 
+      />
     </>
   );
 };
