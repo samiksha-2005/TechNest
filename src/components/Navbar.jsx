@@ -33,7 +33,6 @@ const Navbar = ({ theme, toggleTheme }) => {
     setMenuOpen(false);
   }, []);
 
-  // Close menu when screen is resized to lg or above
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth >= 1024 && menuOpen) {
@@ -63,12 +62,10 @@ const Navbar = ({ theme, toggleTheme }) => {
       }`}>
         <div className="container-custom">
           <div className="flex justify-between items-center">
-            {/* Logo */}
             <Link to="/" className="site-nav__brand gradient-text hover:scale-105 transition-transform">
               TECHNEST
             </Link>
 
-            {/* Desktop Navigation - Visible on LG and above */}
             <div className="site-nav__links hidden lg:flex items-center gap-2">
               {navLinks.map((link) => (
                 <Link
@@ -81,7 +78,6 @@ const Navbar = ({ theme, toggleTheme }) => {
               ))}
             </div>
 
-            {/* Actions */}
             <div className="site-nav__actions flex items-center gap-6">
               <button
                 onClick={toggleTheme}
@@ -90,22 +86,23 @@ const Navbar = ({ theme, toggleTheme }) => {
                 {theme === 'dark' ? '☀️' : '🌙'}
               </button>
 
-              {/* Hamburger Menu - Hidden on LG and above */}
+              {/* Hamburger Menu - Hidden when menu is open OR on LG and above */}
               <button
-                className="site-nav__toggle flex lg:hidden flex-col gap-1.5 w-8 z-[1001] relative"
+                className={`site-nav__toggle flex lg:hidden flex-col gap-1.5 w-8 z-[1001] relative transition-opacity duration-300 ${
+                  menuOpen ? 'opacity-0 pointer-events-none' : 'opacity-100'
+                }`}
                 onClick={toggleMenu}
                 aria-label="Toggle menu"
               >
-                <span className={`w-full h-0.5 bg-slate-50 transition-all duration-300 ${menuOpen ? 'rotate-45 translate-y-2' : ''}`}></span>
-                <span className={`w-full h-0.5 bg-slate-50 transition-all duration-300 ${menuOpen ? 'opacity-0' : ''}`}></span>
-                <span className={`w-full h-0.5 bg-slate-50 transition-all duration-300 ${menuOpen ? '-rotate-45 -translate-y-2' : ''}`}></span>
+                <span className="w-full h-0.5 bg-slate-50 transition-all duration-300"></span>
+                <span className="w-full h-0.5 bg-slate-50 transition-all duration-300"></span>
+                <span className="w-full h-0.5 bg-slate-50 transition-all duration-300"></span>
               </button>
             </div>
           </div>
         </div>
       </nav>
 
-      {/* Mobile Menu Component */}
       <MenuBar 
         menuOpen={menuOpen} 
         closeMenu={closeMenu} 

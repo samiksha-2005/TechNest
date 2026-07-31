@@ -104,21 +104,21 @@ const About = () => {
           <h2 className="text-4xl md:text-5xl font-bold text-center mb-16 gradient-text">Meet Our Team</h2>
           <div className="team-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {[
-              { name: 'John Doe', position: 'CEO & Founder' },
-              { name: 'Jane Smith', position: 'Creative Director' },
-              { name: 'Mike Johnson', position: 'Lead Developer' },
-              { name: 'Sarah Williams', position: 'UX Designer' },
-              { name: 'David Brown', position: 'Marketing Manager' },
-              { name: 'Emily Davis', position: 'Project Manager' },
+              { name: 'John Doe', position: 'CEO & Founder', image: '' },
+              { name: 'Jane Smith', position: 'Creative Director', image: 'https://images.unsplash.com/photo-1655249493799-9cee4fe983bb?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D' },
+              { name: 'Mike Johnson', position: 'Lead Developer', image: '' },
+              { name: 'Sarah Williams', position: 'UX Designer', image: '' },
+              { name: 'David Brown', position: 'Marketing Manager', image: '' },
+              { name: 'Emily Davis', position: 'Project Manager', image: '' },
             ].map((member, index) => (
               <div 
                 key={index} 
                 className="team-member text-center p-8 bg-slate-800/50 rounded-3xl border border-slate-700 card-hover"
               >
                 <div 
-                  className="w-40 h-40 mx-auto mb-6 rounded-full"
+                  className="w-40 h-40 mx-auto mb-6 rounded-full object-cover"
                   style={{ background: 'linear-gradient(135deg, var(--color-primary), var(--color-secondary))' }}
-                ></div>
+                >{member.image}</div>
                 <h3 className="text-xl font-bold mb-2">{member.name}</h3>
                 <p className="text-slate-400">{member.position}</p>
               </div>

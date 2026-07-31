@@ -7,33 +7,16 @@ const MenuBar = ({ menuOpen, closeMenu, navLinks }) => {
   const overlayRef = useRef(null);
   const linksRef = useRef([]);
   const decorRef = useRef(null);
-  const navigateTimeoutRef = useRef(null);
   const location = useLocation();
   const navigate = useNavigate();
 
   const handleLinkClick = (path, event) => {
     event.preventDefault();
-
-    if (navigateTimeoutRef.current) {
-      window.clearTimeout(navigateTimeoutRef.current);
-    }
-
-    closeMenu();
-
-    navigateTimeoutRef.current = window.setTimeout(() => {
-      navigate(path);
-      navigateTimeoutRef.current = null;
-    }, 500);
+    navigate(path);
   };
 
   const handleCloseClick = (event) => {
     event.stopPropagation();
-
-    if (navigateTimeoutRef.current) {
-      window.clearTimeout(navigateTimeoutRef.current);
-      navigateTimeoutRef.current = null;
-    }
-
     closeMenu();
   };
 
@@ -43,34 +26,24 @@ const MenuBar = ({ menuOpen, closeMenu, navLinks }) => {
     const currentLinks = [...linksRef.current];
     const currentDecor = decorRef.current;
 
-    // Always kill every tween on every ref first, regardless of branch.
-    // This guarantees the animation we're about to start can never be
-    // blocked, partially overridden, or fought by a leftover tween
-    // (e.g. the infinite floating "yoyo" animation on the links).
     gsap.killTweensOf([currentMenu, currentOverlay, ...currentLinks, currentDecor]);
 
     if (menuOpen) {
-      // Lock body scroll
       document.body.style.overflow = 'hidden';
 
-      // Force a known starting point before animating, so we never
-      // inherit a stale x/opacity value from a previous run.
       gsap.set(overlayRef.current, { opacity: 0 });
       gsap.set(menuRef.current, { x: '100%' });
       gsap.set(decorRef.current, { scale: 0, rotation: -180, opacity: 0 });
       gsap.set(linksRef.current, { x: 100, opacity: 0 });
 
-      // Animate menu opening
       const tl = gsap.timeline();
 
-      // Overlay fade in
       tl.fromTo(
         overlayRef.current,
         { opacity: 0 },
         { opacity: 1, duration: 0.3, ease: 'power2.inOut' }
       );
 
-      // Menu slide in
       tl.fromTo(
         menuRef.current,
         { x: '100%' },
@@ -78,7 +51,6 @@ const MenuBar = ({ menuOpen, closeMenu, navLinks }) => {
         '-=0.2'
       );
 
-      // Decorative element animation
       tl.fromTo(
         decorRef.current,
         { scale: 0, rotation: -180, opacity: 0 },
@@ -86,7 +58,6 @@ const MenuBar = ({ menuOpen, closeMenu, navLinks }) => {
         '-=0.4'
       );
 
-      // Stagger links animation
       tl.fromTo(
         linksRef.current,
         { x: 100, opacity: 0 },
@@ -94,7 +65,6 @@ const MenuBar = ({ menuOpen, closeMenu, navLinks }) => {
         '-=0.5'
       );
 
-      // Add subtle floating animation to links
       linksRef.current.forEach((link, index) => {
         gsap.to(link, {
           y: -10,
@@ -107,11 +77,9 @@ const MenuBar = ({ menuOpen, closeMenu, navLinks }) => {
       });
 
     } else {
-      // Animate menu closing
       const tl = gsap.timeline({
         onComplete: () => {
           document.body.style.overflow = 'unset';
-          // Reset inline styles so the next "open" starts from a clean, known state
           gsap.set(linksRef.current, { clearProps: 'all' });
           gsap.set(menuRef.current, { clearProps: 'transform' });
           gsap.set(overlayRef.current, { clearProps: 'opacity' });
@@ -119,7 +87,6 @@ const MenuBar = ({ menuOpen, closeMenu, navLinks }) => {
         }
       });
 
-      // Links fade out
       tl.to(linksRef.current, {
         x: 100,
         opacity: 0,
@@ -128,14 +95,12 @@ const MenuBar = ({ menuOpen, closeMenu, navLinks }) => {
         ease: 'power2.in'
       });
 
-      // Menu slide out
       tl.to(menuRef.current, {
         x: '100%',
         duration: 0.5,
         ease: 'power3.in'
       }, '-=0.2');
 
-      // Overlay fade out
       tl.to(overlayRef.current, {
         opacity: 0,
         duration: 0.3,
@@ -144,36 +109,30 @@ const MenuBar = ({ menuOpen, closeMenu, navLinks }) => {
     }
 
     return () => {
-      // Cleanup: kill all GSAP animations
       gsap.killTweensOf([currentMenu, currentOverlay, ...currentLinks, currentDecor]);
-
-      if (navigateTimeoutRef.current) {
-        window.clearTimeout(navigateTimeoutRef.current);
-      }
     };
   }, [menuOpen]);
 
-  // Close menu when route changes
   useEffect(() => {
-    closeMenu();
+    if (menuOpen) {
+      closeMenu();
+    }
   }, [location.pathname, closeMenu]);
 
   return (
     <>
-      {/* Backdrop Overlay */}
       <div
         ref={overlayRef}
-        className={`fixed inset-0 bg-black/70 backdrop-blur-md z-998 lg:hidden ${
+        className={`fixed inset-0 bg-black/70 backdrop-blur-md z-[998] lg:hidden ${
           menuOpen ? 'pointer-events-auto' : 'pointer-events-none'
         }`}
         style={{ opacity: 0 }}
         onClick={closeMenu}
       />
 
-      {/* Mobile Menu */}
       <div
         ref={menuRef}
-        className="fixed top-0 right-0 h-screen w-full sm:w-105 z-1000 lg:hidden overflow-hidden shadow-2xl"
+        className="fixed top-0 right-0 h-screen w-full sm:w-105 z-[1000] lg:hidden overflow-hidden shadow-2xl"
         style={{
           transform: 'translateX(100%)',
           background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%)',
@@ -184,7 +143,7 @@ const MenuBar = ({ menuOpen, closeMenu, navLinks }) => {
           type="button"
           onClick={handleCloseClick}
           aria-label="Close menu"
-          className="absolute top-6 right-6 z-1100 flex h-11 w-11 items-center justify-center rounded-full border border-white/15 bg-white/10 text-white transition-all duration-300 hover:bg-white/20 hover:scale-105 active:scale-95"
+          className="absolute top-6 right-6 z-[1100] flex h-11 w-11 items-center justify-center rounded-full border border-white/15 bg-white/10 text-white transition-all duration-300 hover:bg-white/20 hover:scale-105 active:scale-95"
         >
           <span className="relative block h-4 w-4">
             <span className="absolute left-1/2 top-1/2 h-0.5 w-4 -translate-x-1/2 -translate-y-1/2 rotate-45 rounded-full bg-current" />
@@ -192,7 +151,6 @@ const MenuBar = ({ menuOpen, closeMenu, navLinks }) => {
           </span>
         </button>
 
-        {/* Decorative Background Element */}
         <div
           ref={decorRef}
           className="absolute top-20 right-10 w-72 h-72 rounded-full"
@@ -202,7 +160,6 @@ const MenuBar = ({ menuOpen, closeMenu, navLinks }) => {
           }}
         />
 
-        {/* Additional decorative gradient */}
         <div
           className="absolute bottom-20 left-10 w-64 h-64 rounded-full"
           style={{
@@ -211,15 +168,12 @@ const MenuBar = ({ menuOpen, closeMenu, navLinks }) => {
           }}
         />
 
-        {/* Menu Content */}
         <div className="relative h-full flex flex-col items-center justify-center px-10 py-20">
-          {/* Header Text */}
           <div className="absolute top-10 left-10">
             <h2 className="text-xl font-bold text-white tracking-wider">MENU</h2>
             <div className="w-16 h-1 bg-linear-to-r from-indigo-500 to-purple-500 mt-2 rounded-full"></div>
           </div>
 
-          {/* Navigation Links */}
           <nav className="flex flex-col items-center gap-8 w-full mt-8">
             {navLinks.map((link, index) => (
               <Link
@@ -236,7 +190,6 @@ const MenuBar = ({ menuOpen, closeMenu, navLinks }) => {
                     : '3px 3px 6px rgba(0, 0, 0, 0.5)'
                 }}
               >
-                {/* Number prefix */}
                 <span
                   className="absolute -left-12 top-1/2 -translate-y-1/2 text-sm font-mono transition-colors duration-300"
                   style={{
@@ -246,13 +199,11 @@ const MenuBar = ({ menuOpen, closeMenu, navLinks }) => {
                   0{index + 1}
                 </span>
 
-                {/* Link text */}
                 <span className="relative inline-block">
                   <span className={location.pathname === link.path ? 'gradient-text-menu' : 'hover-text'}>
                     {link.name}
                   </span>
 
-                  {/* Animated underline */}
                   <span
                     className="absolute -bottom-2 left-0 h-1 rounded-full transition-all duration-500"
                     style={{
@@ -262,7 +213,6 @@ const MenuBar = ({ menuOpen, closeMenu, navLinks }) => {
                   />
                 </span>
 
-                {/* Hover Glow Effect */}
                 <span
                   className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-2xl pointer-events-none"
                   style={{
@@ -274,18 +224,15 @@ const MenuBar = ({ menuOpen, closeMenu, navLinks }) => {
             ))}
           </nav>
 
-          {/* Footer Info */}
           <div className="absolute bottom-12 left-0 right-0 flex flex-col items-center gap-4">
             <div className="w-24 h-0.5 bg-linear-to-r from-transparent via-slate-500 to-transparent" />
             <p className="text-slate-300 text-sm tracking-wide font-medium">TECHNEST © 2024</p>
           </div>
         </div>
 
-        {/* Decorative Corner Elements */}
         <div className="absolute top-0 right-0 w-24 h-24 border-t-2 border-r-2 border-indigo-500/40 rounded-tr-lg" />
         <div className="absolute bottom-0 left-0 w-24 h-24 border-b-2 border-l-2 border-purple-500/40 rounded-bl-lg" />
 
-        {/* Additional corner accents */}
         <div className="absolute top-0 right-0 w-2 h-12 bg-linear-to-b from-indigo-500 to-transparent" />
         <div className="absolute top-0 right-0 w-12 h-2 bg-linear-to-l from-indigo-500 to-transparent" />
       </div>
@@ -331,7 +278,6 @@ const MenuBar = ({ menuOpen, closeMenu, navLinks }) => {
           }
         }
 
-        /* Ensure text is always visible */
         .menu-link * {
           -webkit-font-smoothing: antialiased;
           -moz-osx-font-smoothing: grayscale;
