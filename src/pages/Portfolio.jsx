@@ -118,20 +118,27 @@ const Portfolio = () => {
     });
   }, []);
 
+  // Fade the (new) set of cards in every time the filter actually changes.
+  // Explicit fromTo + clearProps avoids GSAP inheriting stale inline
+  // styles left on DOM nodes that React reused across filter switches.
   useEffect(() => {
-    if (!isAnimating) {
-      gsap.from(".project-card", {
-        y: 50,
-        opacity: 0.8,
+    gsap.fromTo(
+      ".project-card",
+      { opacity: 0, y: 50 },
+      {
+        opacity: 1,
+        y: 0,
         duration: 0.6,
         stagger: 0.1,
         ease: "power3.out",
-      });
-    }
-  }, [filter, isAnimating]);
+        overwrite: true,
+        clearProps: "opacity,transform",
+      }
+    );
+  }, [filter]);
 
   const handleFilterChange = (newFilter) => {
-    if (newFilter === filter) return;
+    if (newFilter === filter || isAnimating) return;
 
     setIsAnimating(true);
 
@@ -140,6 +147,7 @@ const Portfolio = () => {
       y: 30,
       duration: 0.3,
       stagger: 0.05,
+      overwrite: true,
       onComplete: () => {
         setFilter(newFilter);
         setIsAnimating(false);
@@ -173,7 +181,10 @@ const Portfolio = () => {
               <button
                 key={category}
                 onClick={() => handleFilterChange(category)}
+                disabled={isAnimating}
                 className={`px-8 py-3 rounded-full font-semibold transition-all duration-300 ${
+                  isAnimating ? "opacity-60 cursor-not-allowed" : ""
+                } ${
                   filter === category
                     ? "text-white shadow-lg"
                     : "bg-slate-800 text-slate-400 border border-slate-700 hover:border-[var(--color-primary)] hover:text-[var(--color-primary)]"
