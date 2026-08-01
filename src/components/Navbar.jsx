@@ -3,19 +3,34 @@ import { Link, useLocation } from 'react-router-dom';
 import gsap from 'gsap';
 import MenuBar from './MenuBar';
 
-const Navbar = ({ theme, toggleTheme }) => {
+const Navbar = ({ theme, toggleTheme, scrollInstance }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const location = useLocation();
 
   useEffect(() => {
+    if (scrollInstance && typeof scrollInstance.on === 'function' && typeof scrollInstance.off === 'function') {
+      const handleScroll = (args) => {
+        const scrollY = args?.scroll?.y ?? scrollInstance.scroll?.instance?.scroll?.y ?? 0;
+        setIsScrolled(scrollY > 50);
+      };
+
+      scrollInstance.on('scroll', handleScroll);
+      handleScroll();
+
+      return () => {
+        scrollInstance.off('scroll', handleScroll);
+      };
+    }
+
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 50);
     };
 
     window.addEventListener('scroll', handleScroll);
+    handleScroll();
     return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  }, [scrollInstance]);
 
   useEffect(() => {
     gsap.fromTo(
@@ -55,7 +70,7 @@ const Navbar = ({ theme, toggleTheme }) => {
 
   return (
     <>
-      <nav className={`site-nav fixed top-0 left-0 w-full z-[999] transition-all duration-300 ${
+      <nav className={`site-nav fixed top-0 left-0 w-full z-999 transition-all duration-300 ${
         isScrolled 
           ? 'site-nav--scrolled py-4' 
           : 'bg-transparent py-6'
@@ -88,7 +103,7 @@ const Navbar = ({ theme, toggleTheme }) => {
 
               {/* Hamburger Menu - Hidden when menu is open OR on LG and above */}
               <button
-                className={`site-nav__toggle flex lg:hidden flex-col gap-1.5 w-8 z-[1001] relative transition-opacity duration-300 ${
+                className={`site-nav__toggle flex lg:hidden flex-col gap-1.5 w-8 z-1001 relative transition-opacity duration-300 ${
                   menuOpen ? 'opacity-0 pointer-events-none' : 'opacity-100'
                 }`}
                 onClick={toggleMenu}

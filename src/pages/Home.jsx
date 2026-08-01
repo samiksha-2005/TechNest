@@ -88,7 +88,7 @@ const Home = () => {
             <br />
             <span className="gradient-text">Digital Excellence</span>
           </h1>
-          <p className="hero-subtitle text-xl md:text-2xl text-slate-400 mb-12 max-w-2xl mx-auto">
+          <p className="hero-subtitle text-xl md:text-2xl text-slate-400 mb-12 mt-10 max-w-2xl mx-auto">
             Transforming ideas into innovative digital experiences
           </p>
           <div className="hero-cta flex gap-6 justify-center flex-wrap">

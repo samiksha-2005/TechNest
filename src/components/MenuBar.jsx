@@ -18,19 +18,32 @@ const MenuBar = ({ menuOpen, closeMenu, navLinks }) => {
   const handleCloseClick = (event) => {
     event.stopPropagation();
 
+    const currentMenu = menuRef.current;
+    const currentOverlay = overlayRef.current;
+
     gsap.to([menuRef.current, overlayRef.current], {
       opacity: [0, 0],
       x: '100%',
       duration: 0.25,
       ease: 'power2.inOut',
-      onComplete: closeMenu,
+      onComplete: () => {
+        if (currentMenu) {
+          gsap.set(currentMenu, { clearProps: 'transform' });
+        }
+
+        if (currentOverlay) {
+          gsap.set(currentOverlay, { clearProps: 'opacity' });
+        }
+
+        closeMenu();
+      },
     });
   };
 
   useEffect(() => {
     const currentMenu = menuRef.current;
     const currentOverlay = overlayRef.current;
-    const currentLinks = [...linksRef.current];
+    const currentLinks = linksRef.current.filter(Boolean);
     const currentDecor = decorRef.current;
 
     gsap.killTweensOf([currentMenu, currentOverlay, ...currentLinks, currentDecor]);
@@ -69,10 +82,21 @@ const MenuBar = ({ menuOpen, closeMenu, navLinks }) => {
       const tl = gsap.timeline({
         onComplete: () => {
           document.body.style.overflow = 'unset';
-          gsap.set(linksRef.current, { clearProps: 'all' });
-          gsap.set(menuRef.current, { clearProps: 'transform' });
-          gsap.set(overlayRef.current, { clearProps: 'opacity' });
-          gsap.set(decorRef.current, { clearProps: 'all' });
+          if (linksRef.current.length) {
+            gsap.set(linksRef.current.filter(Boolean), { clearProps: 'all' });
+          }
+
+          if (menuRef.current) {
+            gsap.set(menuRef.current, { clearProps: 'transform' });
+          }
+
+          if (overlayRef.current) {
+            gsap.set(overlayRef.current, { clearProps: 'opacity' });
+          }
+
+          if (decorRef.current) {
+            gsap.set(decorRef.current, { clearProps: 'all' });
+          }
         }
       });
 
@@ -98,7 +122,7 @@ const MenuBar = ({ menuOpen, closeMenu, navLinks }) => {
     }
 
     return () => {
-      gsap.killTweensOf([currentMenu, currentOverlay, ...currentLinks, currentDecor]);
+      gsap.killTweensOf([currentMenu, currentOverlay, ...currentLinks, currentDecor].filter(Boolean));
     };
   }, [menuOpen]);
 
