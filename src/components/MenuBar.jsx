@@ -163,14 +163,14 @@ const MenuBar = ({ menuOpen, closeMenu, navLinks }) => {
             <div className="w-16 h-1 bg-linear-to-r from-indigo-500 to-purple-500 mt-2 rounded-full"></div>
           </div>
 
-          <nav className="menu-scrollbar-hide mt-20 flex min-h-0 w-full flex-1 flex-col items-center gap-5 overflow-y-auto overscroll-contain px-2 pb-10 sm:gap-7 md:gap-8 sm:pb-14">
+          <nav className="menu-scrollbar-hide mt-20 flex min-h-0 w-full flex-1 flex-col items-center justify-center gap-7 overflow-y-auto overscroll-contain px-2 pb-10 sm:gap-7 md:gap-8 sm:pb-14">
             {navLinks.map((link, index) => (
               <Link
                 key={link.path}
                 to={link.path}
                 ref={(el) => (linksRef.current[index] = el)}
                 onClick={(event) => handleLinkClick(link.path, event)}
-                className="menu-link group relative text-3xl sm:text-4xl md:text-5xl font-bold transition-all duration-300"
+                className="menu-link group relative text-3xl sm:text-4xl md:text-5xl font-normal transition-all duration-300"
                 style={{
                   fontFamily: 'var(--font-family-heading)',
                   color: '#ffffff',
@@ -179,17 +179,30 @@ const MenuBar = ({ menuOpen, closeMenu, navLinks }) => {
                     : '3px 3px 6px rgba(0, 0, 0, 0.5)'
                 }}
               >
-                <span
+                {/* <span
                   className="absolute -left-10 sm:-left-12 top-1/2 -translate-y-1/2 text-xs sm:text-sm font-mono transition-colors duration-300"
                   style={{
                     color: location.pathname === link.path ? '#818cf8' : '#94a3b8'
                   }}
                 >
                   0{index + 1}
-                </span>
+                </span> */}
 
                 <span className="relative inline-block">
-                  <span className="text-white transition-opacity duration-300 group-hover:opacity-90">
+                  <span
+                    className="transition-opacity duration-300 group-hover:opacity-90"
+                    style={
+                      location.pathname === link.path
+                        ? {
+                            background: 'linear-gradient(90deg, #6366f1, #8b5cf6, #a855f7)',
+                            WebkitBackgroundClip: 'text',
+                            WebkitTextFillColor: 'transparent',
+                            backgroundClip: 'text',
+                            color: 'transparent'
+                          }
+                        : { color: '#ffffff' }
+                    }
+                  >
                     {link.name}
                   </span>
 
