@@ -17,7 +17,14 @@ const MenuBar = ({ menuOpen, closeMenu, navLinks }) => {
 
   const handleCloseClick = (event) => {
     event.stopPropagation();
-    closeMenu();
+
+    gsap.to([menuRef.current, overlayRef.current], {
+      opacity: [0, 0],
+      x: '100%',
+      duration: 0.25,
+      ease: 'power2.inOut',
+      onComplete: closeMenu,
+    });
   };
 
   useEffect(() => {
@@ -34,7 +41,7 @@ const MenuBar = ({ menuOpen, closeMenu, navLinks }) => {
       gsap.set(overlayRef.current, { opacity: 0 });
       gsap.set(menuRef.current, { x: '100%' });
       gsap.set(decorRef.current, { scale: 0, rotation: -180, opacity: 0 });
-      gsap.set(linksRef.current, { x: 100, opacity: 0 });
+      gsap.set(linksRef.current, { x: 0, opacity: 1 });
 
       const tl = gsap.timeline();
 
@@ -57,24 +64,6 @@ const MenuBar = ({ menuOpen, closeMenu, navLinks }) => {
         { scale: 1, rotation: 0, opacity: 1, duration: 0.8, ease: 'back.out(1.7)' },
         '-=0.4'
       );
-
-      tl.fromTo(
-        linksRef.current,
-        { x: 100, opacity: 0 },
-        { x: 0, opacity: 1, stagger: 0.08, duration: 0.5, ease: 'power3.out' },
-        '-=0.5'
-      );
-
-      linksRef.current.forEach((link, index) => {
-        gsap.to(link, {
-          y: -10,
-          duration: 1.5,
-          repeat: -1,
-          yoyo: true,
-          ease: 'sine.inOut',
-          delay: index * 0.1
-        });
-      });
 
     } else {
       const tl = gsap.timeline({
@@ -117,13 +106,13 @@ const MenuBar = ({ menuOpen, closeMenu, navLinks }) => {
     if (menuOpen) {
       closeMenu();
     }
-  }, [location.pathname, closeMenu]);
+  }, [location.pathname, menuOpen, closeMenu]);
 
   return (
     <>
       <div
         ref={overlayRef}
-        className={`fixed inset-0 bg-black/70 backdrop-blur-md z-[998] lg:hidden ${
+        className={`fixed inset-0 bg-black/70 backdrop-blur-md z-998 lg:hidden ${
           menuOpen ? 'pointer-events-auto' : 'pointer-events-none'
         }`}
         style={{ opacity: 0 }}
@@ -132,7 +121,7 @@ const MenuBar = ({ menuOpen, closeMenu, navLinks }) => {
 
       <div
         ref={menuRef}
-        className="fixed top-0 right-0 h-screen w-full sm:w-105 z-[1000] lg:hidden overflow-hidden shadow-2xl"
+        className="fixed top-0 right-0 h-screen w-full max-w-none sm:max-w-104 md:max-w-120 z-1000 lg:hidden overflow-hidden shadow-2xl"
         style={{
           transform: 'translateX(100%)',
           background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%)',
@@ -143,7 +132,7 @@ const MenuBar = ({ menuOpen, closeMenu, navLinks }) => {
           type="button"
           onClick={handleCloseClick}
           aria-label="Close menu"
-          className="absolute top-6 right-6 z-[1100] flex h-11 w-11 items-center justify-center rounded-full border border-white/15 bg-white/10 text-white transition-all duration-300 hover:bg-white/20 hover:scale-105 active:scale-95"
+          className="absolute top-6 right-6 z-1100 flex h-11 w-11 items-center justify-center rounded-full border border-white/15 bg-white/10 text-white transition-all duration-300 hover:bg-white/20 hover:scale-105 active:scale-95 pointer-events-auto"
         >
           <span className="relative block h-4 w-4">
             <span className="absolute left-1/2 top-1/2 h-0.5 w-4 -translate-x-1/2 -translate-y-1/2 rotate-45 rounded-full bg-current" />
@@ -168,30 +157,30 @@ const MenuBar = ({ menuOpen, closeMenu, navLinks }) => {
           }}
         />
 
-        <div className="relative h-full flex flex-col items-center justify-center px-10 py-20">
+        <div className="relative h-full flex flex-col items-center px-6 py-16 sm:px-10 sm:py-20">
           <div className="absolute top-10 left-10">
             <h2 className="text-xl font-bold text-white tracking-wider">MENU</h2>
             <div className="w-16 h-1 bg-linear-to-r from-indigo-500 to-purple-500 mt-2 rounded-full"></div>
           </div>
 
-          <nav className="flex flex-col items-center gap-8 w-full mt-8">
+          <nav className="menu-scrollbar-hide mt-20 flex min-h-0 w-full flex-1 flex-col items-center gap-5 overflow-y-auto overscroll-contain px-2 pb-10 sm:gap-7 md:gap-8 sm:pb-14">
             {navLinks.map((link, index) => (
               <Link
                 key={link.path}
                 to={link.path}
                 ref={(el) => (linksRef.current[index] = el)}
                 onClick={(event) => handleLinkClick(link.path, event)}
-                className="menu-link group relative text-4xl sm:text-5xl font-bold transition-all duration-300"
+                className="menu-link group relative text-3xl sm:text-4xl md:text-5xl font-bold transition-all duration-300"
                 style={{
                   fontFamily: 'var(--font-family-heading)',
-                  color: location.pathname === link.path ? '#ffffff' : '#f1f5f9',
+                  color: '#ffffff',
                   textShadow: location.pathname === link.path
                     ? '0 0 30px rgba(99, 102, 241, 0.8), 3px 3px 6px rgba(0, 0, 0, 0.5)'
                     : '3px 3px 6px rgba(0, 0, 0, 0.5)'
                 }}
               >
                 <span
-                  className="absolute -left-12 top-1/2 -translate-y-1/2 text-sm font-mono transition-colors duration-300"
+                  className="absolute -left-10 sm:-left-12 top-1/2 -translate-y-1/2 text-xs sm:text-sm font-mono transition-colors duration-300"
                   style={{
                     color: location.pathname === link.path ? '#818cf8' : '#94a3b8'
                   }}
@@ -200,7 +189,7 @@ const MenuBar = ({ menuOpen, closeMenu, navLinks }) => {
                 </span>
 
                 <span className="relative inline-block">
-                  <span className={location.pathname === link.path ? 'gradient-text-menu' : 'hover-text'}>
+                  <span className="text-white transition-opacity duration-300 group-hover:opacity-90">
                     {link.name}
                   </span>
 
@@ -224,7 +213,7 @@ const MenuBar = ({ menuOpen, closeMenu, navLinks }) => {
             ))}
           </nav>
 
-          <div className="absolute bottom-12 left-0 right-0 flex flex-col items-center gap-4">
+          <div className="mt-auto flex flex-col items-center gap-4 pb-4 pt-8">
             <div className="w-24 h-0.5 bg-linear-to-r from-transparent via-slate-500 to-transparent" />
             <p className="text-slate-300 text-sm tracking-wide font-medium">TECHNEST © 2024</p>
           </div>
@@ -247,40 +236,18 @@ const MenuBar = ({ menuOpen, closeMenu, navLinks }) => {
           transform: scale(0.95);
         }
 
-        .hover-text {
-          transition: all 0.3s ease;
-        }
-
-        .menu-link:hover .hover-text {
-          color: #ffffff !important;
-          text-shadow: 0 0 20px rgba(99, 102, 241, 0.6);
-        }
-
-        .menu-link:hover .hover-text ~ span {
-          width: 100% !important;
-        }
-
-        .gradient-text-menu {
-          background: linear-gradient(135deg, #a5b4fc 0%, #c4b5fd 50%, #ddd6fe 100%);
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
-          background-clip: text;
-          background-size: 200% 200%;
-          animation: gradientShift 3s ease infinite;
-        }
-
-        @keyframes gradientShift {
-          0%, 100% {
-            background-position: 0% 50%;
-          }
-          50% {
-            background-position: 100% 50%;
-          }
-        }
-
         .menu-link * {
           -webkit-font-smoothing: antialiased;
           -moz-osx-font-smoothing: grayscale;
+        }
+
+        .menu-scrollbar-hide {
+          scrollbar-width: none;
+          -ms-overflow-style: none;
+        }
+
+        .menu-scrollbar-hide::-webkit-scrollbar {
+          display: none;
         }
       `}</style>
     </>

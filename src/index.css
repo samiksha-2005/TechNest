@@ -374,6 +374,12 @@ body.light .site-nav__link--active {
   background: transparent;
 }
 
+@media (min-width: 1024px) {
+  .site-nav__toggle {
+    display: none;
+  }
+}
+
 .site-nav__mobile {
   background: rgba(4, 8, 17, 0.94);
   backdrop-filter: blur(24px);
