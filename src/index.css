@@ -776,5 +776,6 @@ body.light .text-slate-50 {
 }
 
 body{
-  background-color: #16213f;
+  background-color: rgba(98, 135, 215, 0.72);
+  background-color: rgb(164, 134, 221);
 }

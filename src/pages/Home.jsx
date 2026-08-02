@@ -149,7 +149,7 @@ const Home = () => {
       {/* Stats Section */}
       <section 
         className="section-padding mt-10"
-        style={{ background: 'linear-gradient(135deg, var(--color-primary), var(--color-secondary))'}}
+        style={{ background: 'linear-gradient(135deg, rgba(70, 119, 225, 0.72) 45%, rgb(113, 83, 167))'}}
       >
         <div className="container-custom">
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
