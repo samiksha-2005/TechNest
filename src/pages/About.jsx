@@ -119,7 +119,7 @@ const About = () => {
             ].map((member, index) => (
               <div 
                 key={index} 
-                className="team-member text-center p-8 bg-slate-800/50 rounded-3xl border border-slate-700 card-hover"
+                className="team-member text-center p-8 rounded-3xl card-hover"
               >
                 <img className="w-40 h-40 mx-auto mb-6 rounded-full object-cover"
                   style={{ background: 'linear-gradient(135deg, var(--color-primary), var(--color-secondary))' }} src={member.image} alt="" />
