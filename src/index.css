@@ -781,8 +781,8 @@ body.light .team-member:hover {
   box-shadow: 0 0 20px -6px rgba(59, 130, 246, 0.5) !important;
 }
 
-body .team-member:hover {
-  background: #eff6ff !important;
-  border-color: #93c5fd !important;
-  box-shadow: 0 0 20px -6px rgba(59, 130, 246, 0.5) !important;
+body:not(.light) .team-member:hover {
+  background: rgba(109, 125, 255, 0.14) !important;
+  border-color: rgba(109, 125, 255, 0.5) !important;
+  box-shadow: 0 0 24px -6px rgba(109, 125, 255, 0.55) !important;
 }
