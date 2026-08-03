@@ -155,8 +155,8 @@ This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) 
 ## 👨‍💻 Author
 
 **Your Name**
-- GitHub: [@yourusername](https://github.com/yourusername)
-- LinkedIn: [Your Profile](https://linkedin.com/in/yourprofile)
+- GitHub: [@yourusername](https://github.com/samiksha-2005)
+- LinkedIn: [Your Profile](https://linkedin.com/in/samiksha-goli-08b223357)
 - Website: [yourwebsite.com](https://yourwebsite.com)
 
 ## 🙏 Acknowledgments
@@ -165,7 +165,7 @@ This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) 
 - Vite team for the blazing-fast build tool
 - All contributors who help improve this project
 
-<p align="center">Made with ❤️ by <a href="https://github.com/yourusername">Your Name</a></p>
+<p align="center">Made with ❤️ by <a href="https://github.com/yourusername">Samiksha</a></p>
 
 <p align="center">
   <sub>⭐ Star this repo if you find it helpful!</sub>
